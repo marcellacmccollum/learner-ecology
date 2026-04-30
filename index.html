@@ -112,8 +112,26 @@
   .name-btn{padding:10px 28px;border-radius:var(--radius-sm);background:var(--teal-400);color:white;border:none;font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer}
   .name-btn:hover{background:var(--teal-600)}
   .greeting{font-size:13px;color:var(--text-2);padding:0 8px;margin-bottom:8px}
- @media(max-width:640px){
-    .sidebar{display:none}
+@media(max-width:640px){
+    .sidebar{display:none !important}
+    .app-shell{flex-direction:column;min-height:100vh}
+    .mobile-nav{display:flex !important;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+    .mobile-nav button{flex:1;padding:10px 4px 8px;border:none;background:none;font-size:10px;color:var(--text-3);cursor:pointer;border-top:2px solid transparent;line-height:1.3;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .mobile-nav button.active{color:var(--teal-600);border-top-color:var(--teal-400);font-weight:500}
+    .topbar{padding:12px 16px 10px}
+    .topbar-title{font-size:18px}
+    .topbar-sub{font-size:11px}
+    .content{padding:14px 14px 90px}
+    .card{padding:14px;border-radius:10px;margin-bottom:10px}
+    .meta-grid{grid-template-columns:1fr}
+    .chip{font-size:13px;padding:7px 13px}
+    .check-row{padding:11px 0}
+    .slider-label{width:72px;font-size:11px}
+    .name-screen{padding:24px 20px;min-height:50vh}
+    .name-screen h2{font-size:22px}
+    .insight-icon{width:28px;height:28px;font-size:12px}
+  }
+  @media(min-width:641px){.mobile-nav{display:none}}
 </style>
 </head>
 <body>
