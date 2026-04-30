@@ -1,0 +1,86 @@
+cff-version: 1.2.0
+message: "If you use Learner Ecology in your research or teaching, please cite it as below."
+type: software
+title: "Learner Ecology: An Ecological Self-Regulated Learning Tool"
+abstract: >
+  Learner Ecology is a student-facing web application that operationalizes
+  an ecological extension of self-regulated learning (SRL) theory. It supports
+  undergraduate students from underrepresented communities in building
+  ecological self-knowledge — awareness of the environmental, somatic,
+  relational, and temporal conditions that support their learning — as a
+  prerequisite to metacognitive self-regulation. Developed as part of the
+  RISE-UP program at San José State University.
+authors:
+  - family-names: McCollum
+    given-names: ""
+    affiliation: "San José State University, Department of Communicative Disorders and Sciences"
+    alias: "Dr. McCollum"
+repository-code: "https://github.com/YOUR-USERNAME/learner-ecology"
+url: "https://YOUR-USERNAME.github.io/learner-ecology/"
+license: CC-BY-NC-4.0
+version: "1.0.0"
+date-released: "2026-04-30"
+keywords:
+  - self-regulated learning
+  - ecological SRL
+  - metacognition
+  - underrepresented students
+  - communication sciences and disorders
+  - disability justice
+  - DisCrit
+  - Community Cultural Wealth
+  - RISE-UP
+  - somatic attunement
+  - learner variability
+references:
+  - type: article
+    authors:
+      - family-names: Annamma
+        given-names: Subini A.
+      - family-names: Connor
+        given-names: David
+      - family-names: Ferri
+        given-names: Beth
+    title: "Dis/ability critical race studies (DisCrit): Theorizing at the intersections of race and dis/ability"
+    journal: "Race Ethnicity and Education"
+    volume: 16
+    issue: 1
+    year: 2013
+    pages: "1-31"
+  - type: article
+    authors:
+      - family-names: Yosso
+        given-names: Tara J.
+    title: "Whose culture has capital? A critical race theory discussion of community cultural wealth"
+    journal: "Race Ethnicity and Education"
+    volume: 8
+    issue: 1
+    year: 2005
+    pages: "69-91"
+  - type: article
+    authors:
+      - family-names: Schraw
+        given-names: Gregory
+      - family-names: Dennison
+        given-names: Rayne Sperling
+    title: "Assessing metacognitive awareness"
+    journal: "Contemporary Educational Psychology"
+    volume: 19
+    issue: 4
+    year: 1994
+    pages: "460-475"
+  - type: book
+    authors:
+      - family-names: Strayhorn
+        given-names: Terrell L.
+    title: "College students' sense of belonging: A key to educational success for all students"
+    edition: "2nd"
+    year: 2019
+    publisher: "Routledge"
+  - type: book
+    authors:
+      - family-names: Hammond
+        given-names: Zaretta
+    title: "Culturally responsive teaching and the brain"
+    year: 2015
+    publisher: "Corwin"

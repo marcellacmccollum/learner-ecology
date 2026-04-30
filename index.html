@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE-UP · Ecological Self-Discovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-50:  #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --teal-800: #085041;
+    --purple-50:  #EEEDFE;
+    --purple-400: #7F77DD;
+    --purple-600: #534AB7;
+    --purple-800: #3C3489;
+    --amber-50:  #FAEEDA;
+    --amber-400: #EF9F27;
+    --amber-600: #854F0B;
+    --coral-50:  #FAECE7;
+    --coral-400: #D85A30;
+    --coral-600: #712B13;
+    --gray-50:  #F1EFE8;
+    --gray-100: #D3D1C7;
+    --gray-400: #888780;
+    --gray-600: #5F5E5A;
+    --gray-800: #2C2C2A;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --border: rgba(60,60,50,0.10);
+    --border-mid: rgba(60,60,50,0.18);
+    --text: #1a1a17;
+    --text-2: #5F5E5A;
+    --text-3: #888780;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SHELL ── */
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar-wordmark {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--teal-600);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+    padding: 0 8px;
+  }
+
+  .sidebar-sub {
+    font-size: 11px;
+    color: var(--text-3);
+    padding: 0 8px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: var(--gray-50); color: var(--text); }
+  .nav-item.active {
+    background: var(--teal-50);
+    color: var(--teal-600);
+    font-weight: 500;
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .streak-label {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-bottom: 6px;
+  }
+
+  .streak-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .streak-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .topbar {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .topbar-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 3px;
+  }
+
+  .content {
+    flex: 1;
+    padding: 24px 28px;
+    overflow-y: auto;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadein 0.2s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+
+  .card-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* ── TAG CHIPS ── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border-mid);
+    background: var(--gray-50);
+    color: var(--text-2);
+    font-weight: 400;
+  }
+  .chip:hover { border-color: var(--teal-400); color: var(--teal-600); }
+  .chip.selected {
+    background: var(--teal-50);
+    border-color: var(--teal-400);
+    color: var(--teal-600);
+    font-weight: 500;
+  }
+  .chip.teal.selected { background: var(--teal-50); border-color: var(--teal-400); color: var(--teal-600); }
+  .chip.purple.selected { background: var(--purple-50); border-color: var(--purple-400); color: var(--purple-800); }
+  .chip.amber.selected { background: var(--amber-50); border-color: var(--amber-400); color: var(--amber-600); }
+  .chip.coral.selected { background: var(--coral-50); border-color: var(--coral-400); color: var(--coral-600); }
+
+  /* ── CHECKLIST ── */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .check-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .check-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-mid);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .check-circle.checked {
+    background: var(--teal-400);
+    border-color: var(--teal-400);
+  }
+  .check-circle.checked::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 6px;
+    width: 5px; height: 8px;
+    border: 1.5px solid white;
+    border-top: none; border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .check-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* ── SLIDER ── */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .slider-label { font-size: 12px; color: var(--text-2); width: 96px; flex-shrink: 0; }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--gray-100);
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--teal-400);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--teal-400);
+  }
+  .slider-val { font-size: 13px; font-weight: 500; color: var(--text); min-width: 24px; text-align: right; }
+
+  /* ── PROGRESS BARS ── */
+  .bar-row { margin-bottom: 14px; }
+  .bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .bar-label-right { font-size: 11px; font-weight: 500; }
+  .bar-outer {
+    height: 6px;
+    background: var(--gray-50);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar-inner { height: 100%; border-radius: 3px; }
+
+  /* ── PATTERN GRID ── */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .pattern-card {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+  .pattern-card-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .pattern-card-val { font-size: 14px; font-weight: 500; color: var(--text); }
+
+  /* ── PROMPT BUBBLE ── */
+  .prompt-bubble {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ── TEXTAREA ── */
+  textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-mid);
+    background: var(--gray-50);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  textarea:focus { border-color: var(--teal-400); background: white; }
+  textarea::placeholder { color: var(--text-3); }
+
+  /* ── INSIGHT ROWS ── */
+  .insight-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .insight-row:last-child { border-bottom: none; }
+  .insight-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .insight-text { font-size: 13px; color: var(--text); line-height: 1.55; }
+  .insight-text small { display: block; font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+  /* ── NOTE BOX ── */
+  .note-box {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.6;
+    padding: 10px 14px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--teal-400);
+    margin-top: 10px;
+  }
+
+  /* ── METACOG SECTION ── */
+  .meta-banner {
+    background: linear-gradient(135deg, var(--purple-50) 0%, var(--teal-50) 100%);
+    border: 1px solid var(--purple-400);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .meta-banner-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--purple-800);
+    margin-bottom: 6px;
+  }
+  .meta-banner-body {
+    font-size: 13px;
+    color: var(--purple-600);
+    line-height: 1.6;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .meta-card {
+    background: var(--purple-50);
+    border: 1px solid rgba(127,119,221,0.25);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+  }
+  .meta-card-title { font-size: 12px; font-weight: 500; color: var(--purple-800); margin-bottom: 4px; }
+  .meta-card-body { font-size: 12px; color: var(--purple-600); line-height: 1.5; }
+  .meta-q {
+    font-size: 13px;
+    color: var(--text);
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .meta-q:last-child { border-bottom: none; }
+  .meta-q-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--purple-400);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  /* ── FRAMEWORK NOTE ── */
+  .framework-box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-top: 14px;
+    background: var(--surface);
+  }
+  .framework-box h3 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .framework-cite {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+  .framework-cite + .framework-cite { margin-top: 8px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .sidebar { display: none; }
+    .mobile-nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      overflow-x: auto;
+    }
+    .mobile-nav button {
+      flex: 1;
+      min-width: 60px;
+      padding: 12px 8px;
+      border: none;
+      background: none;
+      font-size: 11px;
+      color: var(--text-3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .mobile-nav button.active {
+      color: var(--teal-600);
+      border-bottom-color: var(--teal-400);
+      font-weight: 500;
+    }
+    .content { padding: 16px; }
+    .topbar { padding: 16px; }
+  }
+  @media (min-width: 641px) {
+    .mobile-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- SIDEBAR (desktop) -->
+  <nav class="sidebar">
+    <div class="sidebar-wordmark">RISE-UP</div>
+    <div class="sidebar-sub">Ecological self-discovery</div>
+
+    <button class="nav-item active" onclick="showScreen('checkin', this)">
+      <span class="nav-dot" style="background:var(--teal-400)"></span>
+      Today's check-in
+    </button>
+    <button class="nav-item" onclick="showScreen('reflect', this)">
+      <span class="nav-dot" style="background:var(--purple-400)"></span>
+      Reflect
+    </button>
+    <button class="nav-item" onclick="showScreen('metacog', this)">
+      <span class="nav-dot" style="background:var(--purple-600)"></span>
+      Metacognition
+    </button>
+    <button class="nav-item" onclick="showScreen('patterns', this)">
+      <span class="nav-dot" style="background:var(--amber-400)"></span>
+      My patterns
+    </button>
+    <button class="nav-item" onclick="showScreen('insights', this)">
+      <span class="nav-dot" style="background:var(--teal-600)"></span>
+      Insights
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="streak-label">Week of Apr 28 &nbsp;·&nbsp; 3-day streak</div>
+      <div class="streak-dots">
+        <span class="streak-dot" style="background:var(--teal-400)"></span>
+        <span class="streak-dot" style="background:var(--teal-400)"></span>
+        <span class="streak-dot" style="background:var(--teal-400)"></span>
+        <span class="streak-dot" style="background:var(--gray-100)"></span>
+        <span class="streak-dot" style="background:var(--gray-100)"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav">
+    <button class="active" onclick="showScreen('checkin', this)">Check-in</button>
+    <button onclick="showScreen('reflect', this)">Reflect</button>
+    <button onclick="showScreen('metacog', this)">Metacog</button>
+    <button onclick="showScreen('patterns', this)">Patterns</button>
+    <button onclick="showScreen('insights', this)">Insights</button>
+  </div>
+
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="screen-title">Today's check-in</div>
+        <div class="topbar-sub" id="screen-sub">A quick snapshot — no right answers</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ SCREEN 1: CHECK-IN ══ -->
+      <div class="screen active" id="screen-checkin">
+
+        <div class="card">
+          <div class="card-label">Right now, I feel...</div>
+          <div class="chip-row">
+            <span class="chip teal" onclick="toggleChip(this)">focused</span>
+            <span class="chip purple" onclick="toggleChip(this)">scattered</span>
+            <span class="chip amber" onclick="toggleChip(this)">tired</span>
+            <span class="chip coral" onclick="toggleChip(this)">overwhelmed</span>
+            <span class="chip teal" onclick="toggleChip(this)">curious</span>
+            <span class="chip purple" onclick="toggleChip(this)">motivated</span>
+            <span class="chip amber" onclick="toggleChip(this)">anxious</span>
+            <span class="chip" onclick="toggleChip(this)">+ something else</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">My body right now</div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle checked"></div>
+            <div class="check-text">I've eaten in the last 3 hours</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">I've had water today</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle checked"></div>
+            <div class="check-text">I moved my body at some point</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">I slept more than 6 hours last night</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">I've had a moment of rest or stillness today</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Where I am right now</div>
+          <div class="chip-row">
+            <span class="chip teal selected" onclick="toggleChip(this)">library (alone)</span>
+            <span class="chip" onclick="toggleChip(this)">home</span>
+            <span class="chip" onclick="toggleChip(this)">café</span>
+            <span class="chip" onclick="toggleChip(this)">with people nearby</span>
+            <span class="chip" onclick="toggleChip(this)">outside</span>
+            <span class="chip" onclick="toggleChip(this)">classroom</span>
+            <span class="chip" onclick="toggleChip(this)">somewhere else</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Energy levels</div>
+          <div class="slider-row">
+            <span class="slider-label">body energy</span>
+            <input type="range" min="1" max="10" value="6" step="1"
+              oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">6</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">mental clarity</span>
+            <input type="range" min="1" max="10" value="7" step="1"
+              oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">7</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">readiness for task</span>
+            <input type="range" min="1" max="10" value="4" step="1"
+              oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">4</span>
+          </div>
+        </div>
+
+        <div class="note-box">
+          This check-in is yours — it's not being graded or judged. The goal is to start noticing what's true for you right now, not what you think should be true.
+        </div>
+
+      </div>
+
+      <!-- ══ SCREEN 2: REFLECT ══ -->
+      <div class="screen" id="screen-reflect">
+
+        <div class="card">
+          <div class="card-label">Today's prompt</div>
+          <div class="prompt-bubble">
+            Think of a recent time you actually got something done — not because you forced yourself, but because something <em>clicked</em>. What was different about that moment?
+          </div>
+          <div style="font-size:12px;color:var(--text-3)">You don't have to write a lot. Even a few words count.</div>
+          <textarea placeholder="Write here — this is just for you..."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Deeper questions — go when you're ready</div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">When am I most likely to actually start something — not just plan to?</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">Do I work better alone or with at least one other person nearby?</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">What usually gets in the way when I lose focus?</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">What does "done enough" feel like in my body?</div>
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-circle"></div>
+            <div class="check-text">What relationships or communities make me feel capable?</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Tag what this connects to</div>
+          <div class="chip-row">
+            <span class="chip teal" onclick="toggleChip(this)">motivation</span>
+            <span class="chip purple" onclick="toggleChip(this)">environment</span>
+            <span class="chip amber" onclick="toggleChip(this)">body cues</span>
+            <span class="chip coral" onclick="toggleChip(this)">relationships</span>
+            <span class="chip teal" onclick="toggleChip(this)">time of day</span>
+            <span class="chip purple" onclick="toggleChip(this)">rest &amp; energy</span>
+            <span class="chip amber" onclick="toggleChip(this)">community</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══ SCREEN 3: METACOGNITION ══ -->
+      <div class="screen" id="screen-metacog">
+
+        <div class="meta-banner">
+          <div class="meta-banner-title">Metacognition: knowing how you know</div>
+          <div class="meta-banner-body">
+            Metacognition isn't just about using strategies — it's about understanding <em>why</em> certain conditions help you think. These questions build that self-knowledge over time.
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-card-title">Knowledge of cognition</div>
+            <div class="meta-card-body">What you know about how <em>you</em> learn — your patterns, strengths, what throws you off.</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-card-title">Regulation of cognition</div>
+            <div class="meta-card-body">Using that self-knowledge to plan, monitor, and adjust — before and during a task.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">This week's metacognitive prompts</div>
+          <div class="meta-q" onclick="expandMeta(this)">
+            <span class="meta-q-dot"></span>
+            What's one thing I now know about how I learn best — that I didn't know a month ago?
+          </div>
+          <div class="meta-q" onclick="expandMeta(this)">
+            <span class="meta-q-dot"></span>
+            When I planned to study but didn't start — what was actually going on?
+          </div>
+          <div class="meta-q" onclick="expandMeta(this)">
+            <span class="meta-q-dot"></span>
+            What condition in my environment would I protect if I could?
+          </div>
+          <div class="meta-q" onclick="expandMeta(this)">
+            <span class="meta-q-dot"></span>
+            If I could tell my past self one thing about how I work best, what would it be?
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Reflect on a recent learning moment</div>
+          <div class="prompt-bubble">
+            Think about the last time you studied and it actually went well. What conditions made that possible — and how much of it was within your control?
+          </div>
+          <textarea placeholder="What I noticed about how I learn..."></textarea>
+        </div>
+
+        <div class="framework-box">
+          <h3>Why this matters for RISE-UP</h3>
+          <div class="framework-cite">
+            Metacognitive self-knowledge — knowing what works for you and why — is the bridge between self-awareness and self-regulation. Standard SRL tools teach strategies. This tool builds the prior knowledge that makes strategies useful.
+          </div>
+          <div class="framework-cite" style="margin-top:8px;color:var(--text-3)">
+            Grounded in: Schraw &amp; Dennison (1994) · Hammond, Zaretta — <em>Culturally Responsive Teaching and the Brain</em> · Cho &amp; Shen (2013) SRLPS
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══ SCREEN 4: PATTERNS ══ -->
+      <div class="screen" id="screen-patterns">
+
+        <div class="pattern-grid">
+          <div class="pattern-card">
+            <div class="pattern-card-label">Most focused</div>
+            <div class="pattern-card-val">10am – 12pm</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-card-label">Best environment</div>
+            <div class="pattern-card-val">library, alone</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-card-label">Energy boost</div>
+            <div class="pattern-card-val">after eating + movement</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-card-label">Common block</div>
+            <div class="pattern-card-val">hunger + noise</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Your conditions for flow — based on 12 check-ins</div>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>People nearby (not interacting)</span>
+              <span class="bar-label-right" style="color:var(--teal-600)">often helps</span>
+            </div>
+            <div class="bar-outer">
+              <div class="bar-inner" style="width:75%;background:var(--teal-400)"></div>
+            </div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>Background music</span>
+              <span class="bar-label-right" style="color:var(--amber-600)">mixed</span>
+            </div>
+            <div class="bar-outer">
+              <div class="bar-inner" style="width:45%;background:var(--amber-400)"></div>
+            </div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-header">
+              <span>Morning (before 10am)</span>
+              <span class="bar-label-right" style="color:var(--amber-600)">sometimes</span>
+            </div>
+            <div class="bar-outer">
+              <div class="bar-inner" style="width:40%;background:var(--amber-400)"></div>
+            </div>
+          </div>
+
+          <div class="bar-row" style="margin-bottom:0">
+            <div class="bar-header">
+              <span>Phone nearby</span>
+              <span class="bar-label-right" style="color:var(--coral-600)">often interrupts</span>
+            </div>
+            <div class="bar-outer">
+              <div class="bar-inner" style="width:18%;background:var(--coral-400)"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Metacognitive self-knowledge score — over time</div>
+          <div style="font-size:13px;color:var(--text-2);margin-bottom:12px">Based on your weekly reflection entries</div>
+
+          <div class="bar-row">
+            <div class="bar-header"><span>Ecological awareness</span><span class="bar-label-right" style="color:var(--teal-600)">growing</span></div>
+            <div class="bar-outer"><div class="bar-inner" style="width:68%;background:var(--teal-400)"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-header"><span>Somatic attunement</span><span class="bar-label-right" style="color:var(--teal-600)">growing</span></div>
+            <div class="bar-outer"><div class="bar-inner" style="width:55%;background:var(--teal-400)"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-header"><span>Relational awareness</span><span class="bar-label-right" style="color:var(--purple-600)">emerging</span></div>
+            <div class="bar-outer"><div class="bar-inner" style="width:44%;background:var(--purple-400)"></div></div>
+          </div>
+          <div class="bar-row" style="margin-bottom:0">
+            <div class="bar-header"><span>Variability self-efficacy</span><span class="bar-label-right" style="color:var(--amber-600)">building</span></div>
+            <div class="bar-outer"><div class="bar-inner" style="width:38%;background:var(--amber-400)"></div></div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          These patterns are yours — not prescriptions. They shift. Check back in as you change. Variability is information, not failure.
+        </div>
+
+      </div>
+
+      <!-- ══ SCREEN 5: INSIGHTS ══ -->
+      <div class="screen" id="screen-insights">
+
+        <div class="card">
+          <div class="card-label">What your data is saying</div>
+
+          <div class="insight-row">
+            <div class="insight-icon" style="background:var(--teal-50);color:var(--teal-600)">→</div>
+            <div class="insight-text">
+              You tend to do your best thinking mid-morning, before you've had to manage a lot of people.
+              <small>Observed across 8 of your last 12 check-ins</small>
+            </div>
+          </div>
+
+          <div class="insight-row">
+            <div class="insight-icon" style="background:var(--amber-50);color:var(--amber-600)">→</div>
+            <div class="insight-text">
+              On days when you didn't eat beforehand, your energy rating was 2+ points lower on average.
+              <small>Body check-in data × energy level</small>
+            </div>
+          </div>
+
+          <div class="insight-row">
+            <div class="insight-icon" style="background:var(--purple-50);color:var(--purple-600)">→</div>
+            <div class="insight-text">
+              You described needing people around you in 3 different reflections — even just one person nearby helped.
+              <small>From your reflection entries</small>
+            </div>
+          </div>
+
+          <div class="insight-row">
+            <div class="insight-icon" style="background:var(--teal-50);color:var(--teal-600)">→</div>
+            <div class="insight-text">
+              Your metacognitive self-knowledge score increased by 14 points since week 1. You're building a clearer picture of how you work.
+              <small>Pre/mid metacognition items</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">A question to sit with</div>
+          <div class="prompt-bubble">
+            What would it look like to actually protect your 10am window — not as productivity, but as care for yourself?
+          </div>
+          <textarea placeholder="What I want to try this week..."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Connecting to self-regulation</div>
+          <div class="insight-row" style="padding-top:4px">
+            <div class="insight-icon" style="background:var(--teal-50);color:var(--teal-600);font-size:11px;font-weight:500">Know</div>
+            <div class="insight-text">
+              You now know your conditions: mid-morning, fed, people nearby, phone away.
+              <small>Knowledge of cognition — Schraw &amp; Dennison, 1994</small>
+            </div>
+          </div>
+          <div class="insight-row">
+            <div class="insight-icon" style="background:var(--purple-50);color:var(--purple-600);font-size:11px;font-weight:500">Use</div>
+            <div class="insight-text">
+              The next step is using that knowledge to plan — before the task, not during it.
+              <small>Regulation of cognition → SRL forethought phase</small>
+            </div>
+          </div>
+          <div class="insight-row" style="padding-bottom:4px">
+            <div class="insight-icon" style="background:var(--amber-50);color:var(--amber-600);font-size:11px;font-weight:500">Grow</div>
+            <div class="insight-text">
+              Your variability is expected and navigable. Different days aren't failures — they're data.
+              <small>Variability self-efficacy — grounded in DisCrit (Annamma et al., 2013)</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<script>
+  const screenMeta = {
+    checkin:  ['Today\'s check-in',   'A quick snapshot — no right answers'],
+    reflect:  ['Reflect',             'Go deeper when you\'re ready'],
+    metacog:  ['Metacognition',       'Building self-knowledge over time'],
+    patterns: ['My patterns',         'Built from your own data over time'],
+    insights: ['Insights',            'What the patterns are pointing to'],
+  };
+
+  function showScreen(name, triggerEl) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+
+    document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav button').forEach(n => n.classList.remove('active'));
+    if (triggerEl) triggerEl.classList.add('active');
+
+    const meta = screenMeta[name];
+    if (meta) {
+      document.getElementById('screen-title').textContent = meta[0];
+      document.getElementById('screen-sub').textContent   = meta[1];
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleChip(el) {
+    el.classList.toggle('selected');
+  }
+
+  function toggleCheck(row) {
+    const circle = row.querySelector('.check-circle');
+    circle.classList.toggle('checked');
+  }
+
+  function expandMeta(el) {
+    const dot = el.querySelector('.meta-q-dot');
+    if (el.classList.contains('expanded')) {
+      el.classList.remove('expanded');
+      dot.style.background = 'var(--purple-400)';
+      const ta = el.querySelector('textarea');
+      if (ta) ta.remove();
+    } else {
+      el.classList.add('expanded');
+      dot.style.background = 'var(--teal-400)';
+      const ta = document.createElement('textarea');
+      ta.placeholder = 'Write here...';
+      ta.style.marginTop = '8px';
+      ta.style.width = '100%';
+      el.appendChild(ta);
+      ta.focus();
+    }
+  }
+</script>
+</body>
+</html>
